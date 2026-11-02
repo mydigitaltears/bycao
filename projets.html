@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projets</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100..900&family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="bg"></div>
+
+  <header>
+    <h1>Projets</a></h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="about.html">bio</a></li>
+        <li><a href="mailto:hello@example.com">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="project-grid">
+      <a class="project-card" href="#alouette">
+        <img src="images/1-alouette/22.jpg" alt="Les Louanges - Alouette!" loading="lazy">
+        <h2>Les Louanges - Alouette!</h2>
+      </a>
+
+      <a class="project-card" href="#loup-garou">
+        <img src="images/2-loup-garou/2.jpg" alt="Lou-Adriane Cassidy - Journal d'un Loup-Garou" loading="lazy">
+        <h2>Lou-Adriane Cassidy - Journal d'un Loup-Garou</h2>
+      </a>
+
+      <a class="project-card" href="#emotions">
+        <img src="images/3-emotions/1.jpg" alt="CRi - Émotions" loading="lazy">
+        <h2>CRi - Émotions</h2>
+      </a>
+
+      <a class="project-card" href="#luan">
+        <img src="images/projects/luan/cover.jpg" alt="Luan Larobina" loading="lazy">
+        <h2>Luan Larobina</h2>
+      </a>
+
+      <a class="project-card" href="#transit">
+        <img src="images/5-transit/2.jpg" alt="blesse - Transit" loading="lazy">
+        <h2>blesse - Transit</h2>
+      </a>
+
+      <a class="project-card" href="#corpos">
+        <img src="images/6-corpos/LES_21-Client-LES_FRANCOUVERTES/3.jpg" alt="Corpos - Musique" loading="lazy">
+        <h2>Corpos - Musique</h2>
+      </a>
+
+      <a class="project-card" href="#clips">
+        <img src="images/7-videoclips/ALEX_BURGER-ALLERS-RETOURS/7.jpg" alt="Vidéoclips &amp; Captation" loading="lazy">
+        <h2>Vidéoclips &amp; Captation</h2>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Artist Name</p>
+  </footer>
+
+  <dialog id="project-dialog">
+    <form method="dialog"><button class="close" aria-label="Fermer">×</button></form>
+    <div id="project-content"></div>
+  </dialog>
+
+  <dialog id="lightbox"><img alt=""></dialog>
+
+  <script src="js/background.js" defer></script>
+  <script src="js/projets.js" defer></script>
+</body>
+</html>

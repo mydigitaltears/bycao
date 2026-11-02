@@ -1,0 +1,262 @@
+:root {
+  --font-body: "Jost", sans-serif;
+  --font-display: "League Spartan", sans-serif;
+  --bg: #b81a0f;  /* change per page or section */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: -1;   /* behind all content */
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1fr 150px;   /* content | sidebar width */
+  grid-template-rows: 1fr auto;       /* content stretches | footer */
+  grid-template-areas:
+    "main sidebar"
+    "footer sidebar";
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: white;
+  background-color: var(--bg);
+  position: relative;
+}
+
+/* grain layer over the whole page */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.25;            /* grain strength */
+  mix-blend-mode: multiply; /* try overlay or soft-light too */
+  pointer-events: none;     /* clicks pass through */
+  z-index: 9999;
+}
+
+header {
+  grid-area: sidebar;
+  position: sticky;      /* stays in view while the content scrolls */
+  top: 0;
+  height: 100dvh;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+main   { grid-area: main;   padding: 2rem; min-width: 0; }
+footer { grid-area: footer; padding: 2rem; }
+
+/* headings share the font, sizes are set separately */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0;
+}
+
+/* title in the sidebar */
+header h1 {
+  font-size: 2.5rem;
+  line-height: 0.95;
+}
+
+header h1 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero {
+  margin-top: clamp(1rem, 5vw, 6rem);
+  margin-left: clamp(1rem, 5vw, 6rem);
+  margin-bottom: 7em;
+}
+
+.hero h1 {
+  font-size: clamp(4rem, 0.12rem + 16.57vw, 20rem);
+  margin-left: -0.04em;
+  margin-bottom: clamp(-6rem, 1.94rem - 5.7vw, -0.5rem);
+}
+
+.hero h2 {
+  font-size: 2rem;
+}
+
+.desc {
+  max-width: 1000px;
+  margin-left: auto;
+  padding: 2em;
+}
+
+.desc p {
+  text-align: justify;
+  hyphens: none;          /* never split words */
+  text-align-last: left;
+  text-wrap: pretty;
+}
+
+/* nav links stacked in the sidebar */
+nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* project panel */
+#project-dialog {
+  width: min(1200px, 92vw);
+  height: 90dvh;
+  padding: 0;
+  border: none;
+  overflow-y: auto;
+  background: var(--bg);
+  color: white;
+}
+
+#project-dialog[open] { animation: rise 0.3s ease-out; }
+#project-dialog::backdrop { background: rgb(0 0 0 / 0.5); backdrop-filter: blur(4px); }
+body:has(#project-dialog[open]) { overflow: hidden; }  /* page behind doesn't scroll */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(1.5rem); }
+}
+
+#project-content {
+  padding: 2rem;
+}
+
+#project-content h3 {
+  margin: 3rem 0 1rem;
+  font-size: 1.5rem;
+}
+
+/* zero-height bar keeps the × in view while the panel scrolls */
+#project-dialog form {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  color: inherit;
+  text-decoration: none;
+}
+
+.project-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;  /* every preview is the same shape */
+  object-fit: cover;
+}
+
+.project-card h2 {
+  margin-top: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.close {
+  height: fit-content;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* seamless mosaic */
+.mosaic-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.mosaic-row img {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  height: auto;
+  cursor: zoom-in;
+}
+
+/* fullscreen image */
+#lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: none;
+  background: rgb(0 0 0 / 0.92);
+  cursor: zoom-out;
+}
+
+#lightbox[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* mobile: header goes back on top, panel fills the screen */
+@media (max-width: 768px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "sidebar"
+      "main"
+      "footer";
+  }
+
+  header {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  nav ul {
+    align-items: flex-end;  /* right-align the links on mobile */
+  }
+
+  #project-dialog {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+}
