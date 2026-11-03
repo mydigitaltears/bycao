@@ -1,170 +1,131 @@
 const PROJECTS = {
   "alouette": {
     title: "Les Louanges - Alouette!",
-    text: "Short description of the project.",
-    folder: "images/1-alouette",
-    count: 26,
-    pattern: [2, 3, 1, 3],
+    images: ["images/mosaiques/alouette.jpg"],
   },
   "loup-garou": {
     title: "Lou-Adriane Cassidy - Journal d'un Loup-Garou",
-    text: "Short description of the project.",
-    folder: "images/2-loup-garou",
-    count: 31,
-    pattern: [2, 3, 1, 3],
+    images: ["images/mosaiques/loup-garou.jpg"],
   },
   "emotions": {
     title: "CRi - Émotions",
-    text: "Short description of the project.",
-    folder: "images/3-emotions",
-    count: 10,
-    pattern: [2, 3, 1, 3],
+    images: ["images/mosaiques/emotions.jpg"],
   },
   "luan": {
     title: "Luan Larobina",
-    text: "Short description of the project.",
-    folder: "images/4-luan",
-    count: 10,
-    pattern: [2, 3, 1, 3],
+    images: ["images/mosaiques/luan.jpg"],
   },
   "transit": {
     title: "blesse - Transit",
-    text: "Short description of the project.",
-    folder: "images/5-transit",
-    count: 10,
-    pattern: [2, 3, 1, 3],
+    images: ["images/mosaiques/transit.jpg"],
   },
   "corpos": {
     title: "Corpos - Musique",
-    text: "Short description of the project.",
-    sections: [
-      {
-        subtitle: "Les 21 clients - LES FRANCOUVERTES",
-        folder: "images/6-corpos/LES_21-Client-LES_FRANCOUVERTES",
-        count: 15,
-        pattern: [2, 3, 1, 3],
-      },
-      {
-        subtitle: "NOUVELLES ONDES - SiriusXM",
-        folder: "images/6-corpos/NOUVELLES_ONDES-client_SIRIUS_XM",
-        count: 12,
-        pattern: [3, 2],
-      },
+    images: [
+      "images/mosaiques/corpos-les-21.jpg",
+      "images/mosaiques/corpos-nouvelles-ondes.jpg",
     ],
   },
   "clips": {
     title: "Vidéoclips & Captation",
-    text: "Short description of the project.",
-    folder: "images/7-clips",
-    count: 10,
-    pattern: [2, 3, 1, 3],
+    images: [
+      "images/mosaiques/clips-alex-burger.jpg",
+      "images/mosaiques/clips-karkwa.jpg",
+      "images/mosaiques/clips-les-louanges.jpg",
+    ],
   },
 };
 
-const dialog = document.getElementById("project-dialog");
-const content = document.getElementById("project-content");
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = lightbox.querySelector("img");
-let fromGrid = false; // true if opened by clicking a card on this page
-let renderId = 0;     // ignores a slow load if another project was opened since
+const ANIMATION_MS = 350;
 
-function loadImage(src) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null); // a missing file is skipped
-    img.src = src;
-  });
+const viewer = document.getElementById("viewer");
+const viewerImages = document.getElementById("viewer-images");
+let renderId = 0;     // ignores a slow load if another project was opened since
+let cardImg = null;   // the cover the image grows from and shrinks back to
+let closing = false;
+
+// The transform that makes the image sit on top of its cover
+function coverTransform(img) {
+  if (!cardImg) return "scale(0.92)"; // opened from a direct link, so there's no cover
+  const from = cardImg.getBoundingClientRect();
+  const to = img.getBoundingClientRect();
+  const x = from.left + from.width / 2 - (to.left + to.width / 2);
+  const y = from.top + from.height / 2 - (to.top + to.height / 2);
+  return `translate(${x}px, ${y}px) scale(${from.width / to.width})`;
 }
 
-function buildMosaic(imgs, pattern) {
-  const mosaic = document.createElement("div");
-  mosaic.className = "mosaic";
-  let i = 0;
-  let p = 0;
-  while (i < imgs.length) {
-    const size = pattern[p % pattern.length];
-    const row = document.createElement("div");
-    row.className = "mosaic-row";
-    for (const img of imgs.slice(i, i + size)) {
-      const ratio = img.naturalWidth / img.naturalHeight;
-      img.style.flexGrow = ratio;    // wider images get more of the row
-      img.style.aspectRatio = ratio; // this makes the whole row the same height
-      row.append(img);
-    }
-    mosaic.append(row);
-    i += size;
-    p++;
-  }
-  return mosaic;
+function closeViewer() {
+  if (!viewer.open || closing) return;
+  closing = true;
+  viewer.classList.add("closing");
+
+  // Shrinks whichever image is currently on screen
+  const images = viewerImages.querySelectorAll("img");
+  const img = images[Math.round(viewer.scrollTop / viewer.clientHeight)];
+  const animation = img.animate(
+    [{ transform: "none", opacity: 1 }, { transform: coverTransform(img), opacity: 0 }],
+    { duration: ANIMATION_MS, easing: "ease-in", fill: "forwards" }
+  );
+  animation.finished.then(() => {
+    viewer.close();
+    viewer.classList.remove("closing");
+    closing = false;
+  });
 }
 
 async function render() {
   const id = ++renderId;
-  const project = PROJECTS[location.hash.slice(1)];
+  const key = location.hash.slice(1);
+  const project = PROJECTS[key];
   if (!project) {
-    if (dialog.open) dialog.close();
+    closeViewer();
     return;
   }
 
-  content.innerHTML = `
-    <h2>${project.title}</h2>
-    <p>${project.text}</p>
-  `;
-  if (!dialog.open) dialog.showModal();
-  dialog.scrollTop = 0;
+  const images = project.images.map((src, i) => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = `${project.title}, image ${i + 1}`;
+    return img;
+  });
 
-  // A project without sections is treated as one section
-  const sections = project.sections || [project];
-  const loaded = await Promise.all(sections.map((section) => {
-    const paths = Array.from({ length: section.count }, (_, i) =>
-      `${section.folder}/${i + 1}.jpg`
-    );
-    return Promise.all(paths.map(loadImage));
-  }));
+  // Waits for the images, so they're ready to animate instead of popping in
+  await Promise.all(images.map((img) => img.decode().catch(() => {})));
   if (id !== renderId) return;
 
-  sections.forEach((section, n) => {
-    if (section.subtitle) {
-      const heading = document.createElement("h3");
-      heading.textContent = section.subtitle;
-      content.append(heading);
-    }
+  cardImg = document.querySelector(`.project-card[href="#${key}"] img`);
+  viewerImages.replaceChildren(...images.map((img) => {
+    const page = document.createElement("div");
+    page.className = "viewer-page";
+    page.append(img);
+    return page;
+  }));
 
-    const imgs = loaded[n].filter(Boolean);
-    const label = section.subtitle ? `${project.title}, ${section.subtitle}` : project.title;
-    imgs.forEach((img, i) => { img.alt = `${label}, image ${i + 1}`; });
-    content.append(buildMosaic(imgs, section.pattern));
-  });
+  if (!viewer.open) viewer.showModal();
+  viewer.scrollTop = 0;
+
+  images[0].animate(
+    [{ transform: coverTransform(images[0]) }, { transform: "none" }],
+    { duration: ANIMATION_MS, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
+  );
 }
 
-// Click outside the panel closes it
-dialog.addEventListener("click", (e) => {
-  if (e.target === dialog) dialog.close();
+viewer.querySelector(".close").addEventListener("click", closeViewer);
+
+// Clicking anywhere except the image closes it
+viewer.addEventListener("click", (e) => {
+  if (e.target.tagName !== "IMG") closeViewer();
+});
+
+// Esc also uses the closing animation
+viewer.addEventListener("cancel", (e) => {
+  e.preventDefault();
+  closeViewer();
+});
+
+viewer.addEventListener("close", () => {
+  if (location.hash) history.replaceState(null, "", location.pathname);
 });
 
 window.addEventListener("hashchange", render);
 render(); // opens the right project if the page loads with a #project link
-
-// Fullscreen view
-function showInLightbox(img) {
-  lightboxImg.src = img.src;
-  lightboxImg.alt = img.alt;
-}
-
-content.addEventListener("click", (e) => {
-  if (!e.target.matches(".mosaic img")) return;
-  showInLightbox(e.target);
-  lightbox.showModal();
-});
-
-lightbox.addEventListener("click", () => lightbox.close());
-
-// Left and right arrow keys move between images
-lightbox.addEventListener("keydown", (e) => {
-  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-  const all = [...content.querySelectorAll(".mosaic img")];
-  const i = all.findIndex((img) => img.src === lightboxImg.src);
-  const step = e.key === "ArrowRight" ? 1 : -1;
-  showInLightbox(all[(i + step + all.length) % all.length]);
-});

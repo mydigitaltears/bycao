@@ -7,6 +7,7 @@
   <meta name="description" content="Portfolio of Artist Name, [type of art] based in [city].">
 
   <link rel="icon" href="favicon.ico">
+  <script src="js/lang.js"></script>
   <link rel="stylesheet" href="css/style.css">
 
 
@@ -17,14 +18,20 @@
 <body>
   <div id="bg"></div> 
   <header>
+    <div class="lang-switch">
+        <button type="button" data-set-lang="fr">FR</button>
+        <span>/</span>
+        <button type="button" data-set-lang="en">EN</button>
+    </div>
     <nav>
       <!--
       <a href="index.html">BYCAO</a>
       -->
       <ul>
-        <li><a href="projets.html">projets</a></li>
+        <li data-lang="fr"><a href="projets.html">projets</a></li>
+        <li data-lang="en"><a href="projets.html">projects</a></li>
         <li><a href="about.html">bio</a></li>
-        <li><a href="mailto:hello@example.com">contact</a></li>
+        <li><a href="mailto:charlesantoine.olivier@gmail.com">contact</a></li>
       </ul>
     </nav>
   </header>
@@ -35,11 +42,19 @@
         <h2>Roll-out d’album sur mesure.</h2>
     </div>
     <div class="desc">
-        <p>BYCAO est un studio de direction artistique et de création dédié à la musique et à la culture, fondé par le réalisateur et musicien Charles-Antoine Olivier (CAO).
+        <p data-lang="fr">BYCAO est un studio de direction artistique et de création dédié à la musique et à la culture, fondé par le réalisateur et musicien Charles-Antoine Olivier (CAO).
         Réalisateur de clips d'abord, CAO aborde chaque projet avec un parti pris : mettre l'humain, l'émotion et le storytelling au cœur de l'image. Aujourd'hui, cette démarche s'étend à l'univers visuel complet des projets qu'il accompagne, en orchestrant la direction de création globale d'un album musical. 
         Pensé comme un chef d'orchestre créatif plutôt qu'un studio de production classique, BYCAO fonctionne en réseau : chaque projet est bâti sur mesure en rassemblant les meilleurs talents et sous-traitants de l'industrie québécoise (producteurs, photographes, graphistes, artisans de plateau) adaptés à la vision de l'artiste.
         C'est cette double culture du plateau et de la scène qui ont guidé des projets québécois marquants, qu'il s'agisse de la direction visuelle de Journal d’un loup-garou de Lou-Adriane Cassidy ou de la réalisation de la série de vidéoclips pour Alouette ! de Les Louanges.
         Du roll-out d’album clé en main (série de clips, pochettes, direction créative) jusqu'à la réalisation de clips uniques ou des services de consultation à la carte, CAO s'adapte aux besoins de l'artiste pour garantir un univers cohérent, fort et intemporel.
+        </p>
+        <p data-lang="en">
+            BYCAO is a creative direction studio dedicated to music and culture, founded by director and musician Charles-Antoine Olivier (CAO).
+            First and foremost a music video director, CAO approaches every project with a clear signature: placing humanity, emotion, and storytelling at the core of the image. Today, this approach extends to the complete visual universe of the albums he works on, orchestrating the overarching creative direction for musical projects.
+            Designed as a creative conductor rather than a traditional production house, BYCAO operates as a network: each project is custom-built by bringing together top-tier talent and collaborators from Quebec’s industry (producers, photographers, graphic designers, and set artisans) tailored specifically to the artist's vision.
+            It’s this dual culture of the set and the stage that has driven standout Quebec projects, whether directing the visual identity for Lou-Adriane Cassidy’s Journal d’un loup-garou or directing the music video series for Les Louanges’ Alouette!.
+            From turn-key album roll-outs (music video series, cover art, creative direction) to standalone video direction or à la carte consulting, BYCAO adapts to the artist’s needs to deliver a cohesive, striking, and timeless visual identity.
+
         </p>
     </div>
   </main>

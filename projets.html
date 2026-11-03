@@ -8,23 +8,33 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100..900&family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+  <script src="js/lang.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div id="bg"></div>
 
   <header>
-    <h1>Projets</a></h1>
+    <div class="lang-switch">
+        <button type="button" data-set-lang="fr">FR</button>
+        <span>/</span>
+        <button type="button" data-set-lang="en">EN</button>
+    </div>
     <nav>
       <ul>
-        <li><a href="index.html">Accueil</a></li>
+        <li data-lang="fr"><a href="index.html">accueil</a></li>
+        <li data-lang="en"><a href="index.html">home</a></li>
         <li><a href="about.html">bio</a></li>
-        <li><a href="mailto:hello@example.com">Contact</a></li>
+        <li><a href="mailto:charlesantoine.olivier@gmail.com">contact</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
+    <div class="hero">
+        <h1 data-lang="fr">Projets</h1>
+        <h1 data-lang="en">Projects</h1>
+    </div>
     <section class="project-grid">
       <a class="project-card" href="#alouette">
         <img src="images/1-alouette/22.jpg" alt="Les Louanges - Alouette!" loading="lazy">
@@ -64,15 +74,14 @@
   </main>
 
   <footer>
-    <p>&copy; 2026 Artist Name</p>
+    <p>&copy; 2026 BYCAO</p>
   </footer>
 
-  <dialog id="project-dialog">
-    <form method="dialog"><button class="close" aria-label="Fermer">×</button></form>
-    <div id="project-content"></div>
-  </dialog>
-
-  <dialog id="lightbox"><img alt=""></dialog>
+<dialog id="viewer">
+  <button class="close" type="button" aria-label="Fermer">×</button>
+  <div id="viewer-images"></div>
+  <p class="rotate-hint">Tournez votre téléphone</p>
+</dialog>
 
   <script src="js/background.js" defer></script>
   <script src="js/projets.js" defer></script>

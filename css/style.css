@@ -7,13 +7,24 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-#bg-canvas {
+/* timed background */
+#bg {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
   z-index: -1;   /* behind all content */
+}
+
+#bg div {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+
+#bg div.active {
+  opacity: 1;
 }
 
 body {
@@ -120,48 +131,23 @@ nav a {
   color: inherit;
 }
 
-/* project panel */
-#project-dialog {
-  width: min(1200px, 92vw);
-  height: 90dvh;
-  padding: 0;
-  border: none;
-  overflow-y: auto;
-  background: var(--bg);
-  color: white;
-}
-
-#project-dialog[open] { animation: rise 0.3s ease-out; }
-#project-dialog::backdrop { background: rgb(0 0 0 / 0.5); backdrop-filter: blur(4px); }
-body:has(#project-dialog[open]) { overflow: hidden; }  /* page behind doesn't scroll */
-
-@keyframes rise {
-  from { opacity: 0; transform: translateY(1.5rem); }
-}
-
-#project-content {
-  padding: 2rem;
-}
-
-#project-content h3 {
-  margin: 3rem 0 1rem;
-  font-size: 1.5rem;
-}
-
-/* zero-height bar keeps the × in view while the panel scrolls */
-#project-dialog form {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  height: 0;
-  display: flex;
-  justify-content: flex-end;
-}
-
+/* project previews */
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(4, 1fr);  /* 4 covers on a full-size screen */
   gap: 1.5rem;
+}
+
+@media (max-width: 1200px) {
+  .project-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 500px) {
+  .project-grid { grid-template-columns: 1fr; }
 }
 
 .project-card {
@@ -181,55 +167,153 @@ body:has(#project-dialog[open]) { overflow: hidden; }  /* page behind doesn't sc
   font-size: 1.25rem;
 }
 
-.close {
-  height: fit-content;
-  padding: 0.5rem 1rem;
+/* image viewer, over the page */
+#viewer {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  padding: 0;
   border: none;
-  background: none;
-  color: inherit;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  background: transparent;
+  color: white;
+}
+
+#viewer::backdrop {
+  background: rgb(0 0 0 / 0.75);
+  backdrop-filter: blur(6px);
+  animation: viewer-fade 0.35s ease-out;
+}
+
+#viewer.closing::backdrop {
+  animation: viewer-fade 0.35s ease-in reverse forwards;
+}
+
+@keyframes viewer-fade {
+  from { opacity: 0; }
+}
+
+body:has(#viewer[open]) { overflow: hidden; }  /* page behind doesn't scroll */
+
+.viewer-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  scroll-snap-align: start;
+}
+
+#viewer img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;  /* always shows the whole image, never crops */
+}
+
+#viewer .close {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+  padding: 0.25rem 0.75rem;
+  border: none;
+  background: rgb(0 0 0 / 0.6);
+  color: white;
   font-size: 2rem;
   cursor: pointer;
 }
 
-/* seamless mosaic */
-.mosaic-row {
-  display: flex;
-  align-items: flex-start;
+.rotate-hint {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 1.5rem;
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
 }
 
-.mosaic-row img {
+/* about page */
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);  /* photo | text */
+  gap: clamp(2rem, 5vw, 6rem);
+  align-items: start;
+  margin-top: clamp(1rem, 5vw, 6rem);
+}
+
+.about-photo {
   display: block;
-  flex: 1 1 0;
-  min-width: 0;
+  width: 100%;
   height: auto;
-  cursor: zoom-in;
 }
 
-/* fullscreen image */
-#lightbox {
-  width: 100vw;
-  height: 100dvh;
-  max-width: none;
-  max-height: none;
+.about-text {
+  max-width: 65ch;  /* comfortable reading width */
+  line-height: 1.6;
+}
+
+.about-text h1 {
+  font-size: clamp(3rem, 2rem + 5vw, 7rem);
+  line-height: 0.9;
+  margin-bottom: 2rem;
+}
+
+.about-text h2 {
+  font-size: 1.5rem;
+  margin: 2.5rem 0 0.75rem;
+}
+
+.about-text p {
+  margin: 0 0 1rem;
+}
+
+.about-text a {
+  color: inherit;
+}
+
+.about-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* hides the language that isn't selected */
+html[lang="fr"] [data-lang="en"],
+html[lang="en"] [data-lang="fr"] {
+  display: none !important;
+}
+
+.lang-switch {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.lang-switch button {
   padding: 0;
   border: none;
-  background: rgb(0 0 0 / 0.92);
-  cursor: zoom-out;
+  background: none;
+  color: inherit;
+  font: inherit;
+  opacity: 0.5;
+  cursor: pointer;
 }
 
-#lightbox[open] {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.lang-switch button[aria-pressed="true"] {
+  opacity: 1;
+  text-decoration: underline;
 }
 
-#lightbox img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+/* only shows on a phone held upright */
+@media (orientation: portrait) and (pointer: coarse) {
+  .rotate-hint { display: block; }
 }
 
-/* mobile: header goes back on top, panel fills the screen */
+/* mobile: header goes back on top */
 @media (max-width: 768px) {
   body {
     grid-template-columns: 1fr;
@@ -253,10 +337,7 @@ body:has(#project-dialog[open]) { overflow: hidden; }  /* page behind doesn't sc
     align-items: flex-end;  /* right-align the links on mobile */
   }
 
-  #project-dialog {
-    width: 100vw;
-    max-width: 100vw;
-    height: 100dvh;
-    max-height: 100dvh;
+  .about {
+    grid-template-columns: 1fr;
   }
 }
