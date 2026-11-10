@@ -249,13 +249,16 @@ body:has(#viewer[open]) { overflow: hidden; }  /* page behind doesn't scroll */
   max-height: none;
   object-fit: cover;
 }
+/* video slides use the same margins as the mosaic */
+.viewer-page:has(.video-frame) {
+  padding: 3.5rem 4rem;
+}
 
 .video-frame {
-  width: min(100%, calc(100dvh * 16 / 9));
+  width: min(100%, calc((100dvh - 7rem) * 16 / 9));  /* 7rem = top + bottom margin */
   aspect-ratio: 16 / 9;
   background: black;
 }
-
 .video-frame iframe {
   display: block;
   width: 100%;

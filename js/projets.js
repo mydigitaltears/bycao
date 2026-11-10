@@ -15,6 +15,11 @@ const PROJECTS = {
         swap: [[2,4], []] },
 
       { youtube: "BS5XKP53hEA" },
+      { youtube: "BmKuHta3Goo" },
+      { youtube: "M_WdsLdqbx0" },
+      { youtube: "5XFtdO78b6I" },
+      { youtube: "Po3_p9pvZW4" },
+      { youtube: "DxrWpy7oI1o" },
       // { folder: "images/1-alouette", count: 26, seed: 13, // containders: 11, 
       // //big: [1, 10, 18, 22, 25],
       // cut: [1, 4, 5, 6, 7, 8, 11, 12, 13, 14, 16, 17, 20, 26] },
@@ -556,7 +561,7 @@ function addSeedBox(page) {
   page.append(box);
 }
 
-new MutationObserver(() => {
-  slidesEl.querySelectorAll(".mosaic-page").forEach(addSeedBox);
-}).observe(slidesEl, { childList: true });
+// new MutationObserver(() => {
+//   slidesEl.querySelectorAll(".mosaic-page").forEach(addSeedBox);
+// }).observe(slidesEl, { childList: true });
 // --- end of temporary seed box ---
