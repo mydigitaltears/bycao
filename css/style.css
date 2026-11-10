@@ -493,3 +493,21 @@ html[lang="en"] [data-lang="fr"] {
     max-width: 65ch;  /* same width limit as the text above */
   }
 }
+
+/* phones: bigger title, smaller subtitle, less space underneath */
+@media (max-width: 600px) {
+  .hero {
+    margin-bottom: clamp(2rem, 10vw, 4rem);  /* was 7em */
+  }
+
+  .hero h1 {
+    font-size: clamp(4rem, 24vw, 9rem);      /* BYCAO, bigger on phones */
+  }
+
+  .hero h2 {
+    font-size: clamp(1.1rem, 4.5vw, 1.6rem); /* subtitle, a bit smaller */
+  }
+  h1[data-lang="en"] {
+      zoom: 0.875;
+    }
+}
