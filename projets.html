@@ -22,53 +22,53 @@
     </div>
     <nav>
       <ul>
-        <li data-lang="fr"><a href="index.html">accueil</a></li>
-        <li data-lang="en"><a href="index.html">home</a></li>
-        <li><a href="about.html">bio</a></li>
-        <li><a href="mailto:charlesantoine.olivier@gmail.com">contact</a></li>
+        <li data-lang="fr"><a href="index.html">ACCUEIL</a></li>
+        <li data-lang="en"><a href="index.html">HOME</a></li>
+        <li><a href="about.html">BIO</a></li>
+        <li><a href="mailto:charlesantoine.olivier@gmail.com">CONTACT</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
     <div class="hero">
-        <h1 data-lang="fr">Projets</h1>
-        <h1 data-lang="en">Projects</h1>
+        <h1 data-lang="fr">PROJETS</h1>
+        <h1 data-lang="en">PROJECTS</h1>
     </div>
     <section class="project-grid">
       <a class="project-card" href="#alouette">
         <img src="images/1-alouette/22.jpg" alt="Les Louanges - Alouette!" loading="lazy">
-        <h2>Les Louanges - Alouette!</h2>
+        <h2>LES LOUANGES - ALOUETTE!</h2>
       </a>
 
       <a class="project-card" href="#loup-garou">
         <img src="images/2-loup-garou/2.jpg" alt="Lou-Adriane Cassidy - Journal d'un Loup-Garou" loading="lazy">
-        <h2>Lou-Adriane Cassidy - Journal d'un Loup-Garou</h2>
+        <h2>LOU-ADRIANNE CASSIDY - JOURNAL D'UN LOUP-GAROU</h2>
       </a>
 
       <a class="project-card" href="#emotions">
         <img src="images/3-emotions/1.jpg" alt="CRi - Émotions" loading="lazy">
-        <h2>CRi - Émotions</h2>
+        <h2>CRi - ÉMOTIONS</h2>
       </a>
 
       <a class="project-card" href="#luan">
         <img src="images/projects/luan/cover.jpg" alt="Luan Larobina" loading="lazy">
-        <h2>Luan Larobina</h2>
+        <h2>LUAN LAROBINA</h2>
       </a>
 
       <a class="project-card" href="#transit">
         <img src="images/5-transit/2.jpg" alt="blesse - Transit" loading="lazy">
-        <h2>blesse - Transit</h2>
+        <h2>BLESSE - TRANSIT</h2>
       </a>
 
       <a class="project-card" href="#corpos">
         <img src="images/6-corpos/LES_21-Client-LES_FRANCOUVERTES/3.jpg" alt="Corpos - Musique" loading="lazy">
-        <h2>Corpos - Musique</h2>
+        <h2>CORPOS - MUSIQUE</h2>
       </a>
 
       <a class="project-card" href="#clips">
         <img src="images/7-videoclips/ALEX_BURGER-ALLERS-RETOURS/7.jpg" alt="Vidéoclips &amp; Captation" loading="lazy">
-        <h2>Vidéoclips &amp; Captation</h2>
+        <h2>VIDÉOCLIPS &amp; CAPATIONS</h2>
       </a>
     </section>
   </main>
@@ -79,9 +79,15 @@
 
 <dialog id="viewer">
   <button class="close" type="button" aria-label="Fermer">×</button>
+  <button class="viewer-arrow prev" type="button" aria-label="Précédent" hidden>‹</button>
+  <button class="viewer-arrow next" type="button" aria-label="Suivant" hidden>›</button>
   <div id="viewer-images"></div>
-  <p class="rotate-hint">Tournez votre téléphone</p>
+  <p class="rotate-hint">
+    <span data-lang="fr">Tournez votre téléphone</span>
+    <span data-lang="en">Turn your phone sideways</span>
+  </p>
 </dialog>
+<dialog id="lightbox"><img alt=""></dialog>
 
   <script src="js/background.js" defer></script>
   <script src="js/projets.js" defer></script>
