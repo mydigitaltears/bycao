@@ -1,31 +1,11 @@
 :root {
   --font-body: "Jost", sans-serif;
   --font-display: "League Spartan", sans-serif;
-  --bg: #ffffff;  /* change per page or section */
+  --bg: #ffffff;  /* default; each page sets its own below */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-
-/* timed background */
-#bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;   /* behind all content */
-}
-
-#bg div {
-  position: absolute;
-  inset: 0;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  opacity: 0;
-}
-
-#bg div.active {
-  opacity: 1;
-}
 
 body {
   margin: 0;
@@ -92,6 +72,7 @@ header h1 a {
   text-decoration: none;
 }
 
+/* home page title */
 .hero {
   margin-top: clamp(1rem, 5vw, 6rem);
   margin-left: clamp(1rem, 5vw, 6rem);
@@ -100,12 +81,13 @@ header h1 a {
 
 .hero h1 {
   font-size: clamp(4rem, 0.12rem + 16.57vw, 20rem);
+  line-height: 0.85;      /* exact line height, the same in every browser */
   margin-left: -0.04em;
-  margin-bottom: clamp(-6rem, 1.94rem - 5.7vw, -0.5rem);
 }
 
 .hero h2 {
   font-size: 2rem;
+  margin-top: 0.15em;     /* small, controlled gap under the title */
 }
 
 .desc {
@@ -136,23 +118,38 @@ nav a {
   color: inherit;
 }
 
+/* language switch */
+html[lang="fr"] [data-lang="en"],
+html[lang="en"] [data-lang="fr"] {
+  display: none !important;  /* hides the language that isn't selected */
+}
+
+.lang-switch {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.lang-switch button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.lang-switch button[aria-pressed="true"] {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 /* project previews */
 .project-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);  /* 4 covers on a full-size screen */
   gap: 1.5rem;
-}
-
-@media (max-width: 1200px) {
-  .project-grid { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 900px) {
-  .project-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 500px) {
-  .project-grid { grid-template-columns: 1fr; }
 }
 
 .project-card {
@@ -248,7 +245,9 @@ body:has(#viewer[open]) { overflow: hidden; }  /* page behind doesn't scroll */
   max-width: none;
   max-height: none;
   object-fit: cover;
+  cursor: zoom-in;
 }
+
 /* video slides use the same margins as the mosaic */
 .viewer-page:has(.video-frame) {
   padding: 3.5rem 4rem;
@@ -259,6 +258,7 @@ body:has(#viewer[open]) { overflow: hidden; }  /* page behind doesn't scroll */
   aspect-ratio: 16 / 9;
   background: black;
 }
+
 .video-frame iframe {
   display: block;
   width: 100%;
@@ -299,8 +299,6 @@ body:has(#viewer[open]) { overflow: hidden; }  /* page behind doesn't scroll */
 #viewer.closing .viewer-arrow { display: none; }
 
 /* zoomed image, over the mosaic */
-#viewer .mosaic img { cursor: zoom-in; }
-
 #lightbox {
   width: 100vw;
   height: 100dvh;
@@ -393,45 +391,12 @@ body:has(#viewer[open]) { overflow: hidden; }  /* page behind doesn't scroll */
   padding: 0;
 }
 
-/* hides the language that isn't selected */
-html[lang="fr"] [data-lang="en"],
-html[lang="en"] [data-lang="fr"] {
-  display: none !important;
+/* ---------- screen sizes ---------- */
+
+@media (max-width: 1200px) {
+  .project-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-.lang-switch {
-  display: flex;
-  gap: 0.35rem;
-  align-items: center;
-}
-
-.lang-switch button {
-  padding: 0;
-  border: none;
-  background: none;
-  color: inherit;
-  font: inherit;
-  opacity: 0.5;
-  cursor: pointer;
-}
-
-.lang-switch button[aria-pressed="true"] {
-  opacity: 1;
-  text-decoration: underline;
-}
-
-/* only shows on a phone held upright */
-@media (orientation: portrait) and (pointer: coarse) {
-  .rotate-hint { display: block; }
-}
-
-/* phones held upright: the mosaic scrolls instead of fitting */
-@media (max-width: 768px) and (orientation: portrait) {
-  .mosaic-page { padding: 3.5rem 0.5rem; }
-  .mosaic { height: auto; }
-}
-
-/* mobile: header goes back on top */
 /* mobile and tablet: header goes on top */
 @media (max-width: 1000px) {
   :root {
@@ -481,7 +446,6 @@ html[lang="en"] [data-lang="fr"] {
   .desc {
     padding: var(--gutter) 0;
   }
-  
 
   .about {
     grid-template-columns: 1fr;
@@ -489,9 +453,21 @@ html[lang="en"] [data-lang="fr"] {
     margin-left: 0;
     gap: var(--gutter);
   }
+
   .about-photo {
     max-width: 65ch;  /* same width limit as the text above */
   }
+}
+
+@media (max-width: 900px) {
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* phones held upright: the mosaic scrolls instead of fitting */
+@media (max-width: 768px) and (orientation: portrait) {
+  .mosaic-page { padding: 3.5rem 0.5rem; }
+  .viewer-page:has(.video-frame) { padding: 3.5rem 0.5rem; }
+  .mosaic { height: auto; }
 }
 
 /* phones: bigger title, smaller subtitle, less space underneath */
@@ -507,7 +483,17 @@ html[lang="en"] [data-lang="fr"] {
   .hero h2 {
     font-size: clamp(1.1rem, 4.5vw, 1.6rem); /* subtitle, a bit smaller */
   }
-  h1[data-lang="en"] {
-      zoom: 0.875;
-    }
+
+  /* "Projects" has one letter more than "Projets", so it's set slightly smaller */
+  h1[data-lang="en"] { zoom: 0.875; }
+  h1 [data-lang="en"] { font-size: 0.875em; }
+}
+
+@media (max-width: 500px) {
+  .project-grid { grid-template-columns: 1fr; }
+}
+
+/* only shows on a phone held upright */
+@media (orientation: portrait) and (pointer: coarse) {
+  .rotate-hint { display: block; }
 }
